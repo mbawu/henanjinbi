@@ -27,7 +27,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/productlist_second_close" />
+            android:background="@drawable/my_go" />
     </RelativeLayout>
    <ListView 
         android:id="@+id/productlist_third_listview"
