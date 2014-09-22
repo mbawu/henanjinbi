@@ -17,7 +17,7 @@ public class ChangeTime  implements Runnable{
 	
 	public static  ArrayList<Long> timeList;
 	public static ArrayList<TextView> txtViewList;
-	
+	public static boolean exit=true;
 	public static  long secKillTime=-1;
 	
 	public ChangeTime()
@@ -29,7 +29,7 @@ public class ChangeTime  implements Runnable{
 	
 	@Override
 	public void run() {
-		while(true)
+		while(exit)
 		{
 			try {
 				Thread.sleep(1000);

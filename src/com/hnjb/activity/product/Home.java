@@ -78,10 +78,21 @@ public class Home extends BaseActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
+		//开启倒计时功能
+		startChangeTime();
 		initView();
 		initData();
 	}
 
+	//开启倒计时功能
+		private void startChangeTime() {
+			//如果退出程序以后该标识符为true，再次进入的时候需要重置该标识符才可启动倒计时功能
+			if(!ChangeTime.exit)
+			{
+				ChangeTime.exit=true;
+			}
+			
+		}
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -95,7 +106,7 @@ public class Home extends BaseActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		// 该页面被销毁以后监测刷新秒杀倒计时的线程也将随之结束
-		MyApplication.exit = true;
+				ChangeTime.exit=false;
 	}
 
 	private void initView() {
