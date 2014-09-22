@@ -877,7 +877,7 @@ public class ProductDetail extends Activity implements OnClickListener,
 			break;
 		case R.id.product_call:// 联系客服按钮
 			CustomDialog.Builder builder = new CustomDialog.Builder(this);
-			builder.setMessage("\t\t确定拨打客服电话\n\t\t\t400 - 659 - 7799")
+			builder.setMessage("\t\t确定拨打客服电话?")
 					.setPositiveButton("确定",
 							new DialogInterface.OnClickListener() {
 

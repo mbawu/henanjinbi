@@ -281,15 +281,16 @@ public class Home extends BaseActivity implements OnClickListener,
 									String path = Url.URL_IMGPATH
 											+ item.getString("attachments_path");
 									Log.i(MyApplication.TAG, "path-->" + path);
-									//计算首页广告图片宽高
-									int height=(int) (MyApplication.width*(336.0/553.0));
-									Log.e("Test", "Bitmap width == " + MyApplication.width);  
-									Log.e("Test", "Bitmap Height == " + height);
-									LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-											LayoutParams.MATCH_PARENT,
-											height);
-									 
-									netView.setLayoutParams(layoutParams);
+									netView.setAdjustViewBounds(true);
+//									//计算首页广告图片宽高
+//									int height=(int) (MyApplication.width*(336.0/553.0));
+//									Log.e("Test", "Bitmap width == " + MyApplication.width);  
+//									Log.e("Test", "Bitmap Height == " + height);
+//									LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+//											LayoutParams.MATCH_PARENT,
+//											height);
+//									 
+//									netView.setLayoutParams(layoutParams);
 
 									 
 									MyApplication.client
