@@ -26,6 +26,8 @@ import com.hnjb.model.Coupon;
 import com.hnjb.model.ErrorMsg;
 import com.hnjb.model.NetworkAction;
 import com.hnjb.model.Product;
+import com.hnjb.activity.product.SubmitOrder;
+import com.hnjb.activity.product.SubmitSuccess;
 import com.hnjb.pay.PayMethod;
 
 import android.app.Activity;
@@ -170,20 +172,22 @@ public class SubmitOrder extends Activity implements OnClickListener {
 	// 获取所有商品的价格
 	private void getTotalPrice() {
 		double tatoalPrice = 0;
-		double freightPrice = 0;
+//		double freightPrice = 0;
 		double realPrice = 0;
 		for (int i = 0; i < products.size(); i++) {
 			double tempTatoalPrice = Double.valueOf(((Product) products.get(i))
 					.getTotalPrice());
-			double tempFreightPrice = Double
-					.valueOf(((Product) products.get(i)).getFreight());
+//			double tempFreightPrice = Double
+//					.valueOf(((Product) products.get(i)).getFreight());
 			tatoalPrice = tatoalPrice + tempTatoalPrice;
-			freightPrice = freightPrice + tempFreightPrice;
+//			freightPrice = freightPrice + tempFreightPrice;
 		}
-		realPrice = tatoalPrice + freightPrice;
+//		realPrice = tatoalPrice + freightPrice;
+		realPrice = tatoalPrice;
 		totalPriceTxt.setText("￥" + String.valueOf(tatoalPrice));
-		freightPriceTxt.setText("￥" + String.valueOf(freightPrice));
+		freightPriceTxt.setText("￥" + String.valueOf("0.00"));
 		realPriceTxt.setText("￥" + String.valueOf(realPrice));
+		sendData(NetworkAction.获取运费,tatoalPrice);
 	}
 
 	/**
@@ -272,6 +276,12 @@ public class SubmitOrder extends Activity implements OnClickListener {
 					.substring(1));
 			paramter.put("PayType", "4");
 			paramter.put("cartlist", orderJSON());
+		}
+		else if (request.equals(NetworkAction.获取运费)) {
+			url = Url.URL_ORDER;
+			paramter.put("act", "freight");
+			paramter.put("sid", MyApplication.sid);
+			paramter.put("order_price", object.toString());
 		}
 		Log.i(MyApplication.TAG, request + MyApplication.getUrl(paramter, url));
 		MyApplication.client.postWithURL(url, paramter,
@@ -539,14 +549,15 @@ public class SubmitOrder extends Activity implements OnClickListener {
 												MyApplication.shopCartList.clear();
 										}
 									}
+									Log.i(MyApplication.TAG, "sub suc->"+MyApplication.shopCartList
+									.size());
 										try {
 											MyApplication.shopCartManager
 													.saveProducts(MyApplication.shopCartList);
 										} catch (Exception e) {
 											// TODO: handle exception
 										}
-									//end 删除购物车中提交成功的商品
-									//如果是在线支付的话跳转到支付页面
+										//如果是在线支付的话跳转到支付页面
 										Intent intent=new Intent();
 									if(payway.equals("1"))
 									{
@@ -564,6 +575,13 @@ public class SubmitOrder extends Activity implements OnClickListener {
 									startActivity(intent);
 									finish();
 //									showResult();
+								}
+								else if (request.equals(NetworkAction.获取运费)) {
+									double freight=response.getDouble("freight");
+									double realPrice=Double.valueOf(realPriceTxt.getText().toString().substring(1));
+									realPrice=realPrice+freight;
+									freightPriceTxt.setText("￥" + String.valueOf(freight));
+									realPriceTxt.setText("￥" + String.valueOf(realPrice));
 								}
 							} else {
 								Toast.makeText(
@@ -588,9 +606,8 @@ public class SubmitOrder extends Activity implements OnClickListener {
 	}
 
 
-
 	/**
-	 * 拼接订单商品信息
+	 * 
 	 */
 	public String orderJSON() {
 		StringBuffer json = new StringBuffer();
@@ -688,7 +705,6 @@ public class SubmitOrder extends Activity implements OnClickListener {
 
 			json.append(",\"PriceID\":\"").append(product.getPriceID())
 					.append("\"");
-
 			json.append("}");
 
 		}
