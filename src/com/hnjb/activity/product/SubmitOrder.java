@@ -26,6 +26,7 @@ import com.hnjb.model.Coupon;
 import com.hnjb.model.ErrorMsg;
 import com.hnjb.model.NetworkAction;
 import com.hnjb.model.Product;
+import com.hnjb.pay.PayMethod;
 
 import android.app.Activity;
 import android.app.ActionBar.LayoutParams;
@@ -169,22 +170,20 @@ public class SubmitOrder extends Activity implements OnClickListener {
 	// 获取所有商品的价格
 	private void getTotalPrice() {
 		double tatoalPrice = 0;
-//		double freightPrice = 0;
+		double freightPrice = 0;
 		double realPrice = 0;
 		for (int i = 0; i < products.size(); i++) {
 			double tempTatoalPrice = Double.valueOf(((Product) products.get(i))
 					.getTotalPrice());
-//			double tempFreightPrice = Double
-//					.valueOf(((Product) products.get(i)).getFreight());
+			double tempFreightPrice = Double
+					.valueOf(((Product) products.get(i)).getFreight());
 			tatoalPrice = tatoalPrice + tempTatoalPrice;
-//			freightPrice = freightPrice + tempFreightPrice;
+			freightPrice = freightPrice + tempFreightPrice;
 		}
-//		realPrice = tatoalPrice + freightPrice;
-		realPrice = tatoalPrice;
+		realPrice = tatoalPrice + freightPrice;
 		totalPriceTxt.setText("￥" + String.valueOf(tatoalPrice));
-		freightPriceTxt.setText("￥" + String.valueOf("0.00"));
+		freightPriceTxt.setText("￥" + String.valueOf(freightPrice));
 		realPriceTxt.setText("￥" + String.valueOf(realPrice));
-		sendData(NetworkAction.获取运费,tatoalPrice);
 	}
 
 	/**
@@ -273,12 +272,6 @@ public class SubmitOrder extends Activity implements OnClickListener {
 					.substring(1));
 			paramter.put("PayType", "4");
 			paramter.put("cartlist", orderJSON());
-		}
-		else if (request.equals(NetworkAction.获取运费)) {
-			url = Url.URL_ORDER;
-			paramter.put("act", "freight");
-			paramter.put("sid", MyApplication.sid);
-			paramter.put("order_price", object.toString());
 		}
 		Log.i(MyApplication.TAG, request + MyApplication.getUrl(paramter, url));
 		MyApplication.client.postWithURL(url, paramter,
@@ -546,23 +539,31 @@ public class SubmitOrder extends Activity implements OnClickListener {
 												MyApplication.shopCartList.clear();
 										}
 									}
-									Log.i(MyApplication.TAG, "sub suc->"+MyApplication.shopCartList
-									.size());
 										try {
 											MyApplication.shopCartManager
 													.saveProducts(MyApplication.shopCartList);
 										} catch (Exception e) {
 											// TODO: handle exception
 										}
-									
-									showResult();
-								}
-								else if (request.equals(NetworkAction.获取运费)) {
-									double freight=response.getDouble("freight");
-									double realPrice=Double.valueOf(realPriceTxt.getText().toString().substring(1));
-									realPrice=realPrice+freight;
-									freightPriceTxt.setText("￥" + String.valueOf(freight));
-									realPriceTxt.setText("￥" + String.valueOf(realPrice));
+									//end 删除购物车中提交成功的商品
+									//如果是在线支付的话跳转到支付页面
+										Intent intent=new Intent();
+									if(payway.equals("1"))
+									{
+										Toast.makeText(SubmitOrder.this, "提交订单成功", 2000).show();
+										intent.setClass(SubmitOrder.this, PayMethod.class);
+										intent.putExtra("subject", response.getString("subject"));
+										intent.putExtra("price", realPriceTxt.getText().toString().substring(1));
+										intent.putExtra("oid", response.getString("NEWID"));
+									}
+									//如果是货到付款的话跳转到提交订单成功页面
+									else if(payway.equals("2"))
+									{
+										intent.setClass(SubmitOrder.this, SubmitSuccess.class);
+									}
+									startActivity(intent);
+									finish();
+//									showResult();
 								}
 							} else {
 								Toast.makeText(
@@ -586,26 +587,10 @@ public class SubmitOrder extends Activity implements OnClickListener {
 				});
 	}
 
-	/**
-	 * 
-	 */
-	public String makeOrder(ArrayList<Product> products) {
-		StringBuffer json = new StringBuffer();
-		json.append("[");
-		for (int i = 0; i < products.size(); i++) {
-			// if (al.get(i).getChecked()) {
-			// json.append(toJson(al.get(i)) + ",");
-			// }
 
-		}
-		String str = json.toString().substring(0, json.toString().length() - 1)
-				+ "]";
-		return str;
-
-	}
 
 	/**
-	 * 
+	 * 拼接订单商品信息
 	 */
 	public String orderJSON() {
 		StringBuffer json = new StringBuffer();
@@ -616,12 +601,8 @@ public class SubmitOrder extends Activity implements OnClickListener {
 			if (i > 0)
 				json.append(",");
 			json.append("{");
-			// if (i == 0)
 			json.append("\"product_id\":\"").append(product.getId())
 					.append("\"");
-			// else
-			// json.append(",\"product_id\":\"").append(product.getId())
-			// .append("\"");
 
 			json.append(",\"product_num\":\"").append(product.getNum())
 					.append("\"");
@@ -707,98 +688,87 @@ public class SubmitOrder extends Activity implements OnClickListener {
 
 			json.append(",\"PriceID\":\"").append(product.getPriceID())
 					.append("\"");
-			// json.append(",\"StoreID\":\"").append(giftCoupon.getStoreID())
-			// .append("\"");
-			// json.append(",\"ProductID\":\"").append(giftCoupon.getProductID())
-			// .append("\"");
-			// json.append(",\"ProductName\":\"").append(giftCoupon.getProductName())
-			// .append("\"");
-			// json.append(",\"PriceLine\":\"").append(giftCoupon.getPriceLine())
-			// .append("\"");
-			// json.append(",\"Price\":\"").append(giftCoupon.getPrice())
-			// .append("\"");
 
 			json.append("}");
 
 		}
 		json.append("]");
-		// json.append("}");
 		return json.toString();
 	}
 
-	private void showResult() {
-		// 提交订单成功以后刷新购物车
-		try {
-			MyApplication.shopCartManager
-					.saveProducts(MyApplication.shopCartList);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		CustomDialog.Builder builder = new CustomDialog.Builder(this);
-		Log.i(MyApplication.TAG, "payway-->" + payway);
-		// 如果是在线付款显示查看订单和去付款
-		if (payway.equals("1")) {
-			builder.setMessage("订单提交成功")
-					.setPositiveButton("查看订单",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									goToPage(2);
-									dialog.cancel();
-								}
-							})
-					.setNegativeButton("去付款",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									// 打开付款页面
-									dialog.cancel();
-								}
-							});
-			CustomDialog alert = builder.create();
-			alert.show();
-		}
-		// 如果是货到付款则不显示去付款
-		else if (payway.equals("2")) {
-			builder.setMessage("订单提交成功")
-					.setPositiveButton("查看订单",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									goToPage(2);
-									dialog.cancel();
-								}
-							})
-					.setNegativeButton("再逛逛",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									goToPage(1);
-									dialog.cancel();
-								}
-							});
-			CustomDialog alert = builder.create();
-			alert.show();
-		}
-
-	}
-
-	// 参数1代表前往首页逛逛，参数2代表去订单页面
-	private void goToPage(int page) {
-
-		MyApplication.goToOrder = true;
-
-		// 参数1代表前往首页逛逛，参数2代表去订单页面
-		if (page == 1) {
-			MenuBottom.tabHost.setCurrentTab(0);
-			MenuBottom.radioGroup.check(R.id.main_tab_home);
-		} else if (page == 2) {
-			MenuBottom.tabHost.setCurrentTab(4);
-			MenuBottom.radioGroup.check(R.id.main_tab_personcenter);
-		}
-
-		SubmitOrder.this.finish();
-	}
+//	private void showResult() {
+//		// 提交订单成功以后刷新购物车
+//		try {
+//			MyApplication.shopCartManager
+//					.saveProducts(MyApplication.shopCartList);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		CustomDialog.Builder builder = new CustomDialog.Builder(this);
+//		Log.i(MyApplication.TAG, "payway-->" + payway);
+//		// 如果是在线付款显示查看订单和去付款
+//		if (payway.equals("1")) {
+//			builder.setMessage("订单提交成功")
+//					.setPositiveButton("查看订单",
+//							new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog,
+//										int id) {
+//									goToPage(2);
+//									dialog.cancel();
+//								}
+//							})
+//					.setNegativeButton("去付款",
+//							new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog,
+//										int id) {
+//									// 打开付款页面
+//									dialog.cancel();
+//								}
+//							});
+//			CustomDialog alert = builder.create();
+//			alert.show();
+//		}
+//		// 如果是货到付款则不显示去付款
+//		else if (payway.equals("2")) {
+//			builder.setMessage("订单提交成功")
+//					.setPositiveButton("查看订单",
+//							new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog,
+//										int id) {
+//									goToPage(2);
+//									dialog.cancel();
+//								}
+//							})
+//					.setNegativeButton("再逛逛",
+//							new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog,
+//										int id) {
+//									goToPage(1);
+//									dialog.cancel();
+//								}
+//							});
+//			CustomDialog alert = builder.create();
+//			alert.show();
+//		}
+//
+//	}
+//
+//	// 参数1代表前往首页逛逛，参数2代表去订单页面
+//	private void goToPage(int page) {
+//
+//		MyApplication.goToOrder = true;
+//
+//		// 参数1代表前往首页逛逛，参数2代表去订单页面
+//		if (page == 1) {
+//			MenuBottom.tabHost.setCurrentTab(0);
+//			MenuBottom.radioGroup.check(R.id.main_tab_home);
+//		} else if (page == 2) {
+//			MenuBottom.tabHost.setCurrentTab(4);
+//			MenuBottom.radioGroup.check(R.id.main_tab_personcenter);
+//		}
+//
+//		SubmitOrder.this.finish();
+//	}
 
 	// 刷新listview的高度
 	public void refreshListViewHeight() {
