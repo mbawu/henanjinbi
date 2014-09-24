@@ -199,6 +199,7 @@ public class PersonRegister extends Activity implements OnClickListener {
 		final String pwd = pwdTxt.getText().toString();
 		String pwdAgain = pwdAginTxt.getText().toString();
 		String email = emailTxt.getText().toString();
+		phone=phoneTxt.getText().toString();
 		if (userName.equals("") || valid.equals("") || pwd.equals("")
 				|| pwdAgain.equals("") || email.equals("")) {
 			Toast.makeText(this, "请输入完整注册信息！", 2000).show();
