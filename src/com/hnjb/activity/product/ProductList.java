@@ -41,10 +41,10 @@ public class ProductList extends BaseActivity implements OnClickListener,
 
 	private MyAdapter firstAdapter;//1级分类适配器
 	private MyAdapter secAdapter;//2级分类适配器
-//	private MyAdapter thirdAdapter;//3级分类适配器
+	private MyAdapter thirdAdapter;//3级分类适配器
 	private ArrayList<Object> fristLevel;//1级分类数据
 	private ArrayList<Object> secLevel;//2级分类数据
-//	public ArrayList<Object> thirdLevel;//3级分类数据
+	public ArrayList<Object> thirdLevel;//3级分类数据
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class ProductList extends BaseActivity implements OnClickListener,
 //		thirdListView.setOnItemClickListener(this);
 		fristLevel = new ArrayList<Object>();
 		secLevel = new ArrayList<Object>();
-//		thirdLevel = new ArrayList<Object>();
+		thirdLevel = new ArrayList<Object>();
 	}
 
 	private void initData() {
@@ -144,26 +144,26 @@ public class ProductList extends BaseActivity implements OnClickListener,
 										secLevel.add(i, category);
 									}
 
-//									// 获取三级分类数据
-//									JSONArray thirdList = response
-//											.getJSONArray("catlist3");
-//									for (int i = 0; i < thirdList.length(); i++) {
-//										Category category = new Category();
-//										JSONObject item = thirdList
-//												.getJSONObject(i);
-//										category.setCategory_id(item
-//												.getString("category_id"));
-//										category.setCacheID(item
-//												.getString("CacheID"));
-//										category.setParent_catid(item
-//												.getString("parent_catid"));
-//										category.setCategory_level(item
-//												.getString("category_level"));
-//										category.setCategory_name(item
-//												.getString("category_name"));
-//										thirdLevel.add(i, category);
-//									}
-//									Log.i(MyApplication.TAG, request+"load-->"+thirdLevel.size());
+									// 获取三级分类数据
+									JSONArray thirdList = response
+											.getJSONArray("catlist3");
+									for (int i = 0; i < thirdList.length(); i++) {
+										Category category = new Category();
+										JSONObject item = thirdList
+												.getJSONObject(i);
+										category.setCategory_id(item
+												.getString("category_id"));
+										category.setCacheID(item
+												.getString("CacheID"));
+										category.setParent_catid(item
+												.getString("parent_catid"));
+										category.setCategory_level(item
+												.getString("category_level"));
+										category.setCategory_name(item
+												.getString("category_name"));
+										thirdLevel.add(i, category);
+									}
+									Log.i(MyApplication.TAG, request+"load-->"+thirdLevel.size());
 								}
 
 							} else {

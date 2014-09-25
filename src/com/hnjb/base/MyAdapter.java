@@ -274,27 +274,26 @@ public class MyAdapter extends BaseAdapter implements
 			// 点击二级分类事件
 			RelativeLayout secondItem = (RelativeLayout) convertView
 					.findViewById(R.id.productlist_second_itemlayout);
-			secondItem.setTag(category);
 			secondItem.setOnClickListener(this);
-//			// 找到三级分类列表
-//			ListView thirdListView = (ListView) convertView
-//					.findViewById(R.id.productlist_third_listview);// 3级列表listview
-//			// 获取所有的三级分类集合
-//			ArrayList<Object> thridList = ((ProductList) object).thirdLevel;
+			// 找到三级分类列表
+			ListView thirdListView = (ListView) convertView
+					.findViewById(R.id.productlist_third_listview);// 3级列表listview
+			// 获取所有的三级分类集合
+			ArrayList<Object> thridList = ((ProductList) object).thirdLevel;
 			// 临时存放该二级分类ID所对应的三级分类的集合
-//			ArrayList<Object> temp = new ArrayList<Object>();
-//			for (int i = 0; i < thridList.size(); i++) {
-//				Category thirdCategory = (Category) thridList.get(i);
-//				if (thirdCategory.getParent_catid().equals(
-//						category.getCategory_id()))
-//					temp.add(thirdCategory);
-//			}
-//			// 把获取到的该二级分类下的三级分类装载到适配器里面
-//			MyAdapter adapter = new MyAdapter(object, NetworkAction.三级分类, temp);
-//			thirdListView.setAdapter(adapter);
-//			// 设置列表高度，全部显示三级分类，不要滚动条
-//			setListViewHeight(thirdListView);
-//			secondItem.setTag(thirdListView);
+			ArrayList<Object> temp = new ArrayList<Object>();
+			for (int i = 0; i < thridList.size(); i++) {
+				Category thirdCategory = (Category) thridList.get(i);
+				if (thirdCategory.getParent_catid().equals(
+						category.getCategory_id()))
+					temp.add(thirdCategory);
+			}
+			// 把获取到的该二级分类下的三级分类装载到适配器里面
+			MyAdapter adapter = new MyAdapter(object, NetworkAction.三级分类, temp);
+			thirdListView.setAdapter(adapter);
+			// 设置列表高度，全部显示三级分类，不要滚动条
+			setListViewHeight(thirdListView);
+			secondItem.setTag(thirdListView);
 		} else if (request.equals(NetworkAction.三级分类)) {
 			Category category = (Category) data.get(position);
 			TextView thirdTxt = (TextView) convertView
@@ -620,41 +619,33 @@ public class MyAdapter extends BaseAdapter implements
 			break;
 
 		case R.id.productlist_second_itemlayout:// 二级列表分类点击事件
-			// 获取该分类的信息
-						Category category = (Category) v.getTag();
-						// 从商品分类页面跳转到商品展示页面
-						Intent intent = new Intent().setClass((Context) object,
-								ProductListShow.class);
-						intent.putExtra("Category_id", category.getCategory_id());
-						intent.putExtra("CacheID", category.getCacheID());
-						((ProductList) object).startActivity(intent);
-//			ListView thirdListView = (ListView) v.getTag();
-//			ImageView img = (ImageView) v
-//					.findViewById(R.id.productlist_second_img);
-//			// 二级分类列表底下的三级分类显示的时候
-//			if (thirdListView.getVisibility() == View.VISIBLE) {
-//				img.setBackgroundDrawable(MyApplication.resources
-//						.getDrawable(R.drawable.productlist_second_close));
-//				thirdListView.setVisibility(View.GONE);
-//			} else// 二级分类列表底下的三级分类没有显示的时候
-//			{
-//				img.setBackgroundDrawable(MyApplication.resources
-//						.getDrawable(R.drawable.productlist_second_open));
-//				thirdListView.setVisibility(View.VISIBLE);
-//			}
+			ListView thirdListView = (ListView) v.getTag();
+			ImageView img = (ImageView) v
+					.findViewById(R.id.productlist_second_img);
+			// 二级分类列表底下的三级分类显示的时候
+			if (thirdListView.getVisibility() == View.VISIBLE) {
+				img.setBackgroundDrawable(MyApplication.resources
+						.getDrawable(R.drawable.productlist_second_close));
+				thirdListView.setVisibility(View.GONE);
+			} else// 二级分类列表底下的三级分类没有显示的时候
+			{
+				img.setBackgroundDrawable(MyApplication.resources
+						.getDrawable(R.drawable.productlist_second_open));
+				thirdListView.setVisibility(View.VISIBLE);
+			}
 			break;
-//		case R.id.productlist_third_itemlayout:// 点击三级分类事件
-//			// 获取该分类的信息
-//			Category category = (Category) v.getTag();
-//			// 从商品分类页面跳转到商品展示页面
-//			Intent intent = new Intent().setClass((Context) object,
-//					ProductListShow.class);
-//			intent.putExtra("Category_id", category.getCategory_id());
-//			intent.putExtra("CacheID", category.getCacheID());
-//			((ProductList) object).startActivity(intent);
-//			// Toast.makeText((Context) object, category.getCacheID(), 2000)
-//			// .show();
-//			break;
+		case R.id.productlist_third_itemlayout:// 点击三级分类事件
+			// 获取该分类的信息
+			Category category = (Category) v.getTag();
+			// 从商品分类页面跳转到商品展示页面
+			Intent intent = new Intent().setClass((Context) object,
+					ProductListShow.class);
+			intent.putExtra("Category_id", category.getCategory_id());
+			intent.putExtra("CacheID", category.getCacheID());
+			((ProductList) object).startActivity(intent);
+			// Toast.makeText((Context) object, category.getCacheID(), 2000)
+			// .show();
+			break;
 		case R.id.shopcart_num_sub:// 购物车的减少按钮
 			changeShopCartNum(v, "sub");
 			break;
