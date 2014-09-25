@@ -264,7 +264,7 @@ public class SubmitOrder extends Activity implements OnClickListener {
 					+ realPriceTxt.getText().toString().substring(1));
 			paramter.put("realname", defaultAddress.getRealname());
 			paramter.put("mobile", defaultAddress.getMobile());
-			paramter.put("address", defaultAddress.getAddress());
+			paramter.put("address", defaultAddress.getStreet());
 			paramter.put("provincesid", defaultAddress.getProvince_id());
 			paramter.put("citysid", defaultAddress.getCity_id());
 			paramter.put("countysid", defaultAddress.getCounty_id());
