@@ -61,6 +61,7 @@ public class MyAdapter extends BaseAdapter implements
 	private ArrayList<Object> data;
 	private NetworkAction request;
 	private int orderTypeTemp;
+	private int orderComment;
 	/**
 	 * 
 	 * @param object
@@ -273,26 +274,27 @@ public class MyAdapter extends BaseAdapter implements
 			// 点击二级分类事件
 			RelativeLayout secondItem = (RelativeLayout) convertView
 					.findViewById(R.id.productlist_second_itemlayout);
+			secondItem.setTag(category);
 			secondItem.setOnClickListener(this);
-			// 找到三级分类列表
-			ListView thirdListView = (ListView) convertView
-					.findViewById(R.id.productlist_third_listview);// 3级列表listview
-			// 获取所有的三级分类集合
-			ArrayList<Object> thridList = ((ProductList) object).thirdLevel;
+//			// 找到三级分类列表
+//			ListView thirdListView = (ListView) convertView
+//					.findViewById(R.id.productlist_third_listview);// 3级列表listview
+//			// 获取所有的三级分类集合
+//			ArrayList<Object> thridList = ((ProductList) object).thirdLevel;
 			// 临时存放该二级分类ID所对应的三级分类的集合
-			ArrayList<Object> temp = new ArrayList<Object>();
-			for (int i = 0; i < thridList.size(); i++) {
-				Category thirdCategory = (Category) thridList.get(i);
-				if (thirdCategory.getParent_catid().equals(
-						category.getCategory_id()))
-					temp.add(thirdCategory);
-			}
-			// 把获取到的该二级分类下的三级分类装载到适配器里面
-			MyAdapter adapter = new MyAdapter(object, NetworkAction.三级分类, temp);
-			thirdListView.setAdapter(adapter);
-			// 设置列表高度，全部显示三级分类，不要滚动条
-			setListViewHeight(thirdListView);
-			secondItem.setTag(thirdListView);
+//			ArrayList<Object> temp = new ArrayList<Object>();
+//			for (int i = 0; i < thridList.size(); i++) {
+//				Category thirdCategory = (Category) thridList.get(i);
+//				if (thirdCategory.getParent_catid().equals(
+//						category.getCategory_id()))
+//					temp.add(thirdCategory);
+//			}
+//			// 把获取到的该二级分类下的三级分类装载到适配器里面
+//			MyAdapter adapter = new MyAdapter(object, NetworkAction.三级分类, temp);
+//			thirdListView.setAdapter(adapter);
+//			// 设置列表高度，全部显示三级分类，不要滚动条
+//			setListViewHeight(thirdListView);
+//			secondItem.setTag(thirdListView);
 		} else if (request.equals(NetworkAction.三级分类)) {
 			Category category = (Category) data.get(position);
 			TextView thirdTxt = (TextView) convertView
@@ -499,7 +501,7 @@ public class MyAdapter extends BaseAdapter implements
 			// 要查看的订单类型：1.待付款，2.待发货，3.待收货，4.已完成
 			int orderType = Integer.valueOf(order.getOrderType());
 			orderTypeTemp=orderType;
-			int orderComment=Integer.valueOf(order.getComments());
+			orderComment=Integer.valueOf(order.getComments());
 //			leftBtn.setTag(R.id.tag_three, orderType);
 			leftBtn.setOnClickListener(this);
 			rightBtn.setOnClickListener(this);
@@ -571,7 +573,7 @@ public class MyAdapter extends BaseAdapter implements
 			final EditText comments = (EditText) convertView
 					.findViewById(R.id.addContent);
 			stars.setTag(product);
-			
+			stars.setTag(R.id.tag_first, comments.getText().toString());
 			addComment.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -582,7 +584,6 @@ public class MyAdapter extends BaseAdapter implements
 								"请填写评论！", 2000).show();
 						return;
 					}
-					stars.setTag(R.id.tag_first, comments.getText().toString());
 					MyApplication.comment=false;
 					((OrderEvaluate)object).publishComment(stars);
 				}
@@ -619,33 +620,41 @@ public class MyAdapter extends BaseAdapter implements
 			break;
 
 		case R.id.productlist_second_itemlayout:// 二级列表分类点击事件
-			ListView thirdListView = (ListView) v.getTag();
-			ImageView img = (ImageView) v
-					.findViewById(R.id.productlist_second_img);
-			// 二级分类列表底下的三级分类显示的时候
-			if (thirdListView.getVisibility() == View.VISIBLE) {
-				img.setBackgroundDrawable(MyApplication.resources
-						.getDrawable(R.drawable.productlist_second_close));
-				thirdListView.setVisibility(View.GONE);
-			} else// 二级分类列表底下的三级分类没有显示的时候
-			{
-				img.setBackgroundDrawable(MyApplication.resources
-						.getDrawable(R.drawable.productlist_second_open));
-				thirdListView.setVisibility(View.VISIBLE);
-			}
-			break;
-		case R.id.productlist_third_itemlayout:// 点击三级分类事件
 			// 获取该分类的信息
-			Category category = (Category) v.getTag();
-			// 从商品分类页面跳转到商品展示页面
-			Intent intent = new Intent().setClass((Context) object,
-					ProductListShow.class);
-			intent.putExtra("Category_id", category.getCategory_id());
-			intent.putExtra("CacheID", category.getCacheID());
-			((ProductList) object).startActivity(intent);
-			// Toast.makeText((Context) object, category.getCacheID(), 2000)
-			// .show();
+						Category category = (Category) v.getTag();
+						// 从商品分类页面跳转到商品展示页面
+						Intent intent = new Intent().setClass((Context) object,
+								ProductListShow.class);
+						intent.putExtra("Category_id", category.getCategory_id());
+						intent.putExtra("CacheID", category.getCacheID());
+						((ProductList) object).startActivity(intent);
+//			ListView thirdListView = (ListView) v.getTag();
+//			ImageView img = (ImageView) v
+//					.findViewById(R.id.productlist_second_img);
+//			// 二级分类列表底下的三级分类显示的时候
+//			if (thirdListView.getVisibility() == View.VISIBLE) {
+//				img.setBackgroundDrawable(MyApplication.resources
+//						.getDrawable(R.drawable.productlist_second_close));
+//				thirdListView.setVisibility(View.GONE);
+//			} else// 二级分类列表底下的三级分类没有显示的时候
+//			{
+//				img.setBackgroundDrawable(MyApplication.resources
+//						.getDrawable(R.drawable.productlist_second_open));
+//				thirdListView.setVisibility(View.VISIBLE);
+//			}
 			break;
+//		case R.id.productlist_third_itemlayout:// 点击三级分类事件
+//			// 获取该分类的信息
+//			Category category = (Category) v.getTag();
+//			// 从商品分类页面跳转到商品展示页面
+//			Intent intent = new Intent().setClass((Context) object,
+//					ProductListShow.class);
+//			intent.putExtra("Category_id", category.getCategory_id());
+//			intent.putExtra("CacheID", category.getCacheID());
+//			((ProductList) object).startActivity(intent);
+//			// Toast.makeText((Context) object, category.getCacheID(), 2000)
+//			// .show();
+//			break;
 		case R.id.shopcart_num_sub:// 购物车的减少按钮
 			changeShopCartNum(v, "sub");
 			break;
@@ -674,7 +683,7 @@ public class MyAdapter extends BaseAdapter implements
 				//如果是已完成状态该按钮为评价订单的功能
 			case 4:
 				//如果是未评价的状态才执行评价操作
-				if (order.getComments().equals("0"))
+				if (orderComment==0)
 				{
 					Intent intent2=new Intent();
 					intent2.setClass(((PersonOrder)object).getActivity(), OrderEvaluate.class);

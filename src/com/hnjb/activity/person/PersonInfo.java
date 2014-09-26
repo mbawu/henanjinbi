@@ -53,7 +53,7 @@ public class PersonInfo extends Fragment implements OnClickListener {
 	private EditText nameTxt;// 用户昵称
 	private EditText addressTxt;// 地址
 	private EditText emailTxt;// 邮箱
-//	private EditText phoneTxt;// 电话
+	private EditText phoneTxt;// 电话
 	private EditText oldPwdTxt;// 原密码
 	private EditText newPwdTxt;// 新密码
 	private EditText reNewPwdTxt;// 确认密码
@@ -120,7 +120,7 @@ public class PersonInfo extends Fragment implements OnClickListener {
 		reNewPwdTxt = (EditText) view.findViewById(R.id.person_info_renewpwd);// 确认密码
 		nameTxt = (EditText) view.findViewById(R.id.person_info_namemod);
 		emailTxt = (EditText) view.findViewById(R.id.person_info_emailmod);
-//		phoneTxt = (EditText) view.findViewById(R.id.person_info_phonemod);
+		phoneTxt = (EditText) view.findViewById(R.id.person_info_phonemod);
 		changePwdLy = (LinearLayout) view
 				.findViewById(R.id.person_info_changepwd_layout);
 		changeInfoLy = (LinearLayout) view
@@ -161,7 +161,7 @@ public class PersonInfo extends Fragment implements OnClickListener {
 		String detailAddress = MyApplication.sp.getString("address", "");// 详细地址
 		addressTxt.setText(detailAddress);
 		emailTxt.setText(MyApplication.sp.getString("email", ""));
-//		phoneTxt.setText(MyApplication.sp.getString("phone", ""));
+		phoneTxt.setText(MyApplication.sp.getString("phone", ""));
 		showBrithdayTxt.setText(MyApplication.sp.getString("birthday", ""));
 		sex= MyApplication.sp.getString("sex", "");
 		if(sex.equals("0"))
@@ -234,7 +234,7 @@ public class PersonInfo extends Fragment implements OnClickListener {
 				.toString());
 		MyApplication.ed.putString("address", addressTxt.getText().toString());
 		MyApplication.ed.putString("email", emailTxt.getText().toString());
-//		MyApplication.ed.putString("phone", phoneTxt.getText().toString());
+		MyApplication.ed.putString("phone", phoneTxt.getText().toString());
 		MyApplication.ed.putString("AreaID", areaId);
 		MyApplication.ed.commit();
 	}

@@ -1,5 +1,7 @@
 package com.hnjb.activity.product;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,6 +11,8 @@ import org.json.JSONObject;
 
 import android.app.ActionBar.LayoutParams;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,7 +48,6 @@ import com.hnjb.base.Url;
 import com.hnjb.model.NetworkAction;
 import com.hnjb.model.Product;
 
-//首页
 public class Home extends BaseActivity implements OnClickListener,
 		OnItemClickListener {
 
@@ -74,6 +77,8 @@ public class Home extends BaseActivity implements OnClickListener,
 	public static Handler homeHandler;
 	public ChangeTime changeTime;
 
+	private boolean getHeight=false;
+	private int newHeight=0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -274,7 +279,38 @@ public class Home extends BaseActivity implements OnClickListener,
 							if (request.equals(NetworkAction.首页广告))// 获取首页广告操作
 							{
 								// if (response.getInt("code") == 1) {
-								JSONArray lists = response.getJSONArray("list");
+								final JSONArray lists = response.getJSONArray("list");
+								//如果有首页广告图片并且没有获取到实际网络图片的宽高比例的时候先获取其相对高度
+								if(lists.length()>0 && !getHeight)
+								{
+									Thread thread=new Thread(new Runnable() {
+										
+										@Override
+										public void run() {
+											JSONObject item;
+											try {
+												item = lists.getJSONObject(0);
+												String path = Url.URL_IMGPATH
+														+ item.getString("attachments_path");
+												URL url = new URL(path);
+												String responseCode = url.openConnection().getHeaderField(0);
+												Bitmap map = BitmapFactory.decodeStream(url.openStream());
+												int height = map.getHeight();
+												int width = map.getWidth();
+												newHeight = (int) (MyApplication.width * ((double)height / width));
+												getHeight=true;
+												sendDataToServer(NetworkAction.首页广告);
+											} catch (Exception e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											} 
+											
+											
+										}
+									});
+									thread.start();
+									return;
+								}
 								for (int i = 0; i < lists.length(); i++) {
 									JSONObject item = lists.getJSONObject(i);
 									NetworkImageView netView = new NetworkImageView(
@@ -282,18 +318,11 @@ public class Home extends BaseActivity implements OnClickListener,
 									String path = Url.URL_IMGPATH
 											+ item.getString("attachments_path");
 									Log.i(MyApplication.TAG, "path-->" + path);
-									netView.setAdjustViewBounds(true);
-//									//计算首页广告图片宽高
-//									int height=(int) (MyApplication.width*(336.0/553.0));
-//									Log.e("Test", "Bitmap width == " + MyApplication.width);  
-//									Log.e("Test", "Bitmap Height == " + height);
-//									LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-//											LayoutParams.MATCH_PARENT,
-//											height);
-//									 
-//									netView.setLayoutParams(layoutParams);
-
-									 
+									netView.setAdjustViewBounds(false);
+									LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+											LayoutParams.MATCH_PARENT,
+											newHeight);
+									netView.setLayoutParams(layoutParams);
 									MyApplication.client
 											.getImageForNetImageView(path,
 													netView,
@@ -305,10 +334,6 @@ public class Home extends BaseActivity implements OnClickListener,
 											R.anim.view_out_to_left);
 									flipper.startFlipping();
 								}
-
-								// } else {
-								//
-								// }
 							} else if (request.equals(NetworkAction.热门商品)) {// 获取热门商品
 								if (response.getInt("code") == 1) {// 如果成功的话
 									// objects.clear();
