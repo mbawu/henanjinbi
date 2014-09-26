@@ -44,6 +44,7 @@ import com.hnjb.base.Url;
 import com.hnjb.model.NetworkAction;
 import com.hnjb.model.Product;
 
+//Ê×Ò³
 public class Home extends BaseActivity implements OnClickListener,
 		OnItemClickListener {
 
