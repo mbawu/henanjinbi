@@ -24,6 +24,7 @@ import com.hnjb.model.NetworkAction;
 import com.hnjb.model.Order;
 import com.hnjb.model.Product;
 import com.hnjb.R;
+import com.hnjb.pay.PayMethod;
 
 import android.app.Activity;
 import android.content.Context;
@@ -676,6 +677,15 @@ public class MyAdapter extends BaseAdapter implements
 		case R.id.order_right_btn:// 订单列表右边按钮
 			Order order= (Order) v.getTag();
 			switch (orderTypeTemp) {
+			//如果是待付款状态该按钮为付款的功能
+			case 1:
+				Intent intentPay=new Intent();
+				intentPay.setClass(((PersonOrder)object).getActivity(), PayMethod.class);
+				intentPay.putExtra("subject", order.getOrderSubject());
+				intentPay.putExtra("price", order.getTotalPrice());
+				intentPay.putExtra("oid", order.getOrderID());
+				((PersonOrder)object).startActivity(intentPay);
+				break;
 			//如果是待收货状态该按钮为确认收货的功能
 			case 3:
 				((PersonOrder) object).confirmReceive(order.getOrderID());
