@@ -708,8 +708,10 @@ public class ProductDetail extends Activity implements OnClickListener,
 													.getColor(R.color.gray));
 											giftRB.setId(i);
 											giftRB.setTextSize(12);
-											// giftRB.setTag(item
-											// .getString("Price"));
+											giftRB.setTag(item
+													.getString("GiftName"));
+											product.setGift_name(item
+													.getString("GiftName"));
 											giftGroup.addView(giftRB,layoutParams1);
 											if (i == 0) {
 												// 定义标题文本框
@@ -723,50 +725,27 @@ public class ProductDetail extends Activity implements OnClickListener,
 												layout.addView(giftTxt);
 											}
 										}
+										giftGroup
+										 .setOnCheckedChangeListener(new
+										 OnCheckedChangeListener() {
+										
+										 @Override
+										 public void onCheckedChanged(
+										 RadioGroup group,
+										 int checkedId) {
+										 RadioButton btn = (RadioButton) group
+										 .getChildAt(checkedId);
+										 String gift_name=btn.getTag().toString();
+										 product.setGift_name(gift_name);
+										 }
+										 });
 										layout.addView(giftGroup);
 										giftLayout.addView(layout);
 									}
 									// 如果没有赠品则不显示该模块
 									else
 										giftLayout.setVisibility(View.GONE);
-									// giftGroup
-									// .setOnCheckedChangeListener(new
-									// OnCheckedChangeListener() {
-									//
-									// @Override
-									// public void onCheckedChanged(
-									// RadioGroup group,
-									// int checkedId) {
-									// RadioButton btn = (RadioButton) group
-									// .getChildAt(checkedId);
-									// //
-									// 购买普通商品的时候并且该商品有折扣时使用新属性的价格和折扣计算最新的价格和优惠价
-									// if (buyType.equals("1")
-									// && discount != null) {
-									// String Price = (String) btn
-									// .getTag();
-									// String newPrice = String.valueOf(Double
-									// .valueOf(Price)
-									// * (Double
-									// .valueOf(discount) / 100));
-									// DecimalFormat df = new DecimalFormat(
-									// ".00");
-									// String lessPrice =
-									// String.valueOf(df.format(Double
-									// .valueOf(Price)
-									// - Double.valueOf(newPrice)));
-									// discountTxt
-									// .setText(discount
-									// + "折   抵￥"
-									// + lessPrice);
-									// storePrice
-									// .setText(newPrice);
-									// }
-									// //
-									// }
-									// });
-									// layout.addView(attributeGroup);
-									// attributeLayout.addView(layout);
+								
 
 								}
 								else if (request.equals(NetworkAction.评论列表)) {

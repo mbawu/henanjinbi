@@ -619,6 +619,9 @@ public class SubmitOrder extends Activity implements OnClickListener {
 			// if (i == 0)
 			json.append("\"product_id\":\"").append(product.getId())
 					.append("\"");
+			if(product.getGift_name()!=null)
+				json.append(",\"gift_name\":\"").append(product.getGift_name())
+			.append("\"");
 			// else
 			// json.append(",\"product_id\":\"").append(product.getId())
 			// .append("\"");
