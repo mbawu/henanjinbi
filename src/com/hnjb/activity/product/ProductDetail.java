@@ -27,7 +27,6 @@ import com.hnjb.model.Coupon;
 import com.hnjb.model.ErrorMsg;
 import com.hnjb.model.NetworkAction;
 import com.hnjb.model.Product;
-import com.hnjb.utils.EulaWebView;
 import com.hnjb.R;
 
 import android.annotation.SuppressLint;
