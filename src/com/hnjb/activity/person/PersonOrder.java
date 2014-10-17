@@ -253,6 +253,8 @@ public class PersonOrder extends Fragment {
 												.getString("OrderID"));
 										order.setUserName(orderObject
 												.getString("UserName"));
+										order.setFreight(orderObject
+												.getString("Freight"));
 										order.setOrderSubject(orderObject
 												.getString("OrderSubject"));
 										order.setProductNum(orderObject

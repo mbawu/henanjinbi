@@ -13,6 +13,9 @@ import org.json.JSONObject;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.hnjb.activity.product.SubmitOrder;
+import com.hnjb.activity.product.SubmitSuccess;
+import com.hnjb.pay.PayMethod;
 import com.hnjb.R;
 import com.hnjb.activity.MenuBottom;
 import com.hnjb.activity.person.PersonAddress;
@@ -532,6 +535,7 @@ public class SubmitOrder extends Activity implements OnClickListener {
 									}
 								} else if (request.equals(NetworkAction.提交订单)) {
 									// 删除购物车中提交成功的商品
+									Log.i(MyApplication.TAG, "start");
 									for (int i = 0; i < MyApplication.shopCartList
 											.size(); i++) {
 										Product product = (Product) MyApplication.shopCartList
@@ -554,8 +558,23 @@ public class SubmitOrder extends Activity implements OnClickListener {
 										} catch (Exception e) {
 											// TODO: handle exception
 										}
-									
-									showResult();
+										//如果是在线支付的话跳转到支付页面
+										Intent intent=new Intent();
+									if(payway.equals("1"))
+									{
+										Toast.makeText(SubmitOrder.this, "提交订单成功", 2000).show();
+										intent.setClass(SubmitOrder.this, PayMethod.class);
+										intent.putExtra("subject", response.getString("subject"));
+										intent.putExtra("price", realPriceTxt.getText().toString().substring(1));
+										intent.putExtra("oid", response.getString("NEWID"));
+									}
+									//如果是货到付款的话跳转到提交订单成功页面
+									else if(payway.equals("2"))
+									{
+										intent.setClass(SubmitOrder.this, SubmitSuccess.class);
+									}
+									startActivity(intent);
+									finish();
 								}
 								else if (request.equals(NetworkAction.获取运费)) {
 									double freight=response.getDouble("freight");

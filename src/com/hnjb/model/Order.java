@@ -3,6 +3,8 @@ package com.hnjb.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.hnjb.model.Product;
+
 public class Order implements Serializable{
 
 	private String OrderID;//主订单ID
@@ -22,8 +24,14 @@ public class Order implements Serializable{
 	private String orderType;//要查看的订单类型：1.待付款，2.待发货，3.待收货，4.已完成
 	private String payWay;//payway		付款方式：1在线支付，2货到付款
 	private ArrayList<Object> products;
-	
+	private String Freight;//订单运费
 
+	public String getFreight() {
+		return Freight;
+	}
+	public void setFreight(String freight) {
+		Freight = freight;
+	}
 	public String getPayWay() {
 		return payWay;
 	}

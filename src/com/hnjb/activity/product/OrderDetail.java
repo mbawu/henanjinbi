@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.hnjb.activity.product.OrderDetail;
 import com.hnjb.base.MyAdapter;
 import com.hnjb.base.MyApplication;
 import com.hnjb.base.Url;
@@ -41,6 +42,7 @@ public class OrderDetail extends Activity {
 	private TextView namePhone;// 收货人和电话
 	private TextView address;// 收货地址
 	private TextView flag;// 订单状态
+	private TextView fregitPrice;// 运费
 	private TextView totalprice;// 商品总价
 	private ListView listView;
 	private ArrayList<Object> data;
@@ -70,6 +72,7 @@ public class OrderDetail extends Activity {
 		namePhone = (TextView) findViewById(R.id.order_name_phone);// 收货人和电话
 		address = (TextView) findViewById(R.id.order_address);// 收货地址
 		flag = (TextView) findViewById(R.id.order_flag);// 订单状态
+		fregitPrice = (TextView) findViewById(R.id.order_fregitPrice);//运费
 		totalprice = (TextView) findViewById(R.id.order_totalprice);// 商品总价
 		data = new ArrayList<Object>();
 		listView = (ListView) findViewById(R.id.order_product_listview);
@@ -109,8 +112,8 @@ public class OrderDetail extends Activity {
 			break;
 		}
 
-		
-		totalprice.setText(order.getTotalPrice());
+		fregitPrice.setText("￥"+order.getFreight());
+		totalprice.setText("￥"+order.getTotalPrice());
 		//商品信息
 		ArrayList<Object> tempData=order.getProducts();
 		for (int i = 0; i < tempData.size(); i++) {

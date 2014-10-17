@@ -18,10 +18,10 @@ package com.hnjb.pay;
 public final class Keys {
 
 	//合作身份者id，以2088开头的16位纯数字
-	public static final String DEFAULT_PARTNER = "";
+	public static final String DEFAULT_PARTNER = "2088611202471431";
 
 	//收款支付宝账号
-	public static final String DEFAULT_SELLER = "";
+	public static final String DEFAULT_SELLER = "6540533@qq.com";
 
 	//商户私钥，自助生成
 //	public static final String PRIVATE = "MIICXAIBAAKBgQC111BfPfhZ4CPiILRt5sbeNxhLDPYLMXmoAp6It6/IatQ1M4A0hp/+T5DAri+tWTZyhSxVok9j3HiC8KsTTbdQXBpmNV/pq/R9N3haxohbWeqxWcMseYt9FdQlYcKSFQhSv/czT0IUEhSklPhEDp5IM/RiLP2wOLh3IwcSfC0ldwIDAQABAoGAVPqJeej4/e9sdYm5KD8YItL2jGRDO5nkc6q9scC96lhaUX5+5I0hifRe/lyotUci1cP8owxWM6Hdw7t7B2tjReWqY6mLr7MtlLLfm7S0EWacV5iBID5F5rfd9inuPTh8JtjVtmJO28tfVJJA+PniKelOeMkMOmMKzRgnIjQloFkCQQDlb/6dtzJYHZvBkWI5SYUT0J9rgrak3cA1Dj1RCKPO0vgsgnnQvJqvcPd8LcrvjFlTmiQm55wWKNykLpF8Ni61AkEAyuSrg+eYmi7ufwkguIL77qOigMGHMlpLKSLwGVDLZ4GQqjQYAVLcm9hHDLmPyovcvhh5ysPPLq3tcEqazPYy+wJBAIg7wdHgL3KG0i9TpiEh+HTVkXOC//RQ/4oBVINDQBDU0CuNpcs90hOOXkVL443tpjSv9/tp1xKJXMnYJOa+PWkCQDZPhdX2PbQwEelxgQ/DCDs2FD7RDyacYvgtAQZVyUz4ssfM0AwyqRkSiNpQJbx7Oeis1pU/WwtMxX1EizGISdcCQDkP5bT7HrRexKAmpl+J0Z7LTvvHC5AqVyU25pp5btTcPD7qQDvaZMmUah3VSwltH+wx6dRxWIeJC3L4oDar140=";
