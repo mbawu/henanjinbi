@@ -161,6 +161,8 @@ public class SubmitOrder extends Activity implements OnClickListener {
 		productAdapter = new MyAdapter(this, NetworkAction.提交订单, products);
 		productListView.setDivider(null);
 		productListView.setAdapter(productAdapter);
+		Log.i("test", "products->"+products.size());
+		Log.i("test", "productAdapter->"+productAdapter.getCount());
 		refreshListViewHeight();
 		sendData(NetworkAction.获取收货地址列表, null);
 		// 获取所有商品对应的有效的优惠券
